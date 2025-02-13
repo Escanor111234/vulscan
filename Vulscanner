@@ -1,0 +1,23 @@
+# Create VPC
+aws ec2 create-vpc --cidr-block 10.0.0.0/16 --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=Stateless-Isolated-VPC}]'
+
+# Create Subnet
+aws ec2 create-subnet --vpc-id <VPC_ID> --cidr-block 10.0.1.0/24 --availability-zone <AZ> --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Stateless-Isolated-Subnet}]'
+
+# Create Security Group
+aws ec2 create-security-group --group-name Stateless-Isolated-SG --description "No inbound access" --vpc-id <VPC_ID>
+
+# Launch EC2 Instance
+aws ec2 run-instances --image-id <AMI_ID> --instance-type t2.micro --subnet-id <SUBNET_ID> --security-group-ids <SG_ID> --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Stateless-Instance}]'
+
+# Terminate EC2 Instance
+aws ec2 terminate-instances --instance-ids <INSTANCE_ID>
+
+# Delete Security Group
+aws ec2 delete-security-group --group-id <SG_ID>
+
+# Delete Subnet
+aws ec2 delete-subnet --subnet-id <SUBNET_ID>
+
+# Delete VPC
+aws ec2 delete-vpc --vpc-id <VPC_ID>
